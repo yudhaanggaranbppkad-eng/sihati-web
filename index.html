@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SiHATI - Sistem Honorarium Terintegrasi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        .menu-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .menu-icon {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .pulse-animation {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: .5;
+            }
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-4">
+    
+    <div class="w-full max-w-6xl">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="glass-card rounded-3xl p-8 mb-6">
+                <div class="flex items-center justify-center mb-6">
+                    <img 
+                        src="https://i.imgur.com/Jcf9CIW.png" 
+                        alt="Logo Grobogan" 
+                        class="w-24 h-24 object-contain"
+                        onerror="this.src='https://placehold.co/96x96/667eea/ffffff?text=LOGO'"
+                    >
+                </div>
+                <h1 class="text-4xl md:text-5xl font-extrabold mb-3 gradient-text">
+                    SiHATI
+                </h1>
+                <p class="text-lg text-gray-600 font-medium">
+                    Sistem Honorarium Terintegrasi
+                </p>
+                <p class="text-sm text-gray-500 mt-2">
+                    Pemerintah Kabupaten Grobogan
+                </p>
+            </div>
+        </div>
+
+        <!-- Menu Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Menu 1: Aplikasi Utama -->
+            <div class="glass-card rounded-2xl p-6 menu-card" onclick="goToApp()">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center mb-4 shadow-lg">
+                        <i class="fas fa-desktop text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Aplikasi SiHATI</h3>
+                    <p class="text-sm text-gray-600 mb-4">
+                        Akses sistem input dan kelola data honorarium
+                    </p>
+                    <div class="mt-auto">
+                        <span class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-full text-sm font-medium shadow-md hover:shadow-lg transition-all">
+                            Buka Aplikasi <i class="fas fa-arrow-right ml-2"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Menu 2: Dashboard -->
+            <div class="glass-card rounded-2xl p-6 menu-card" onclick="goToDashboard()">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center mb-4 shadow-lg">
+                        <i class="fas fa-chart-line text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Dashboard</h3>
+                    <p class="text-sm text-gray-600 mb-4">
+                        Lihat statistik dan analisis data honorarium
+                    </p>
+                    <div class="mt-auto">
+                        <span class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-full text-sm font-medium shadow-md hover:shadow-lg transition-all">
+                            Lihat Dashboard <i class="fas fa-arrow-right ml-2"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Menu 3: Petunjuk Login -->
+            <a href="https://docs.google.com/document/d/1_Ysef7boMwDuQyf6Bl-3HWaPmJZdH_a3Ju_GQ8zpADA/edit?usp=sharing" 
+               target="_blank" 
+               class="glass-card rounded-2xl p-6 menu-card">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-green-500 to-teal-600 flex items-center justify-center mb-4 shadow-lg">
+                        <i class="fas fa-file-alt text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Petunjuk Login</h3>
+                    <p class="text-sm text-gray-600 mb-4">
+                        Panduan lengkap untuk mengakses sistem
+                    </p>
+                    <div class="mt-auto">
+                        <span class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-500 to-teal-600 text-white rounded-full text-sm font-medium shadow-md hover:shadow-lg transition-all">
+                            Baca Panduan <i class="fas fa-external-link-alt ml-2"></i>
+                        </span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Menu 4: Tutorial Video -->
+            <a href="https://youtube.com/playlist?list=PLvj0sRQMcSx3WL_TTcHog7g1YmHEgKVm3&si=uiJU7y46Ms3fVTX2" 
+               target="_blank"
+               class="glass-card rounded-2xl p-6 menu-card">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center mb-4 shadow-lg">
+                        <i class="fab fa-youtube text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Tutorial Video</h3>
+                    <p class="text-sm text-gray-600 mb-4">
+                        Pelajari fitur SiHATI melalui video
+                    </p>
+                    <div class="mt-auto">
+                        <span class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-red-500 to-orange-600 text-white rounded-full text-sm font-medium shadow-md hover:shadow-lg transition-all">
+                            Tonton Video <i class="fab fa-youtube ml-2"></i>
+                        </span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Menu 5: FAQ -->
+            <a href="https://sites.google.com/view/sihati-faq/home" 
+               target="_blank"
+               class="glass-card rounded-2xl p-6 menu-card">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-500 to-amber-600 flex items-center justify-center mb-4 shadow-lg">
+                        <i class="fas fa-question-circle text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">FAQ</h3>
+                    <p class="text-sm text-gray-600 mb-4">
+                        Pertanyaan yang sering diajukan
+                    </p>
+                    <div class="mt-auto">
+                        <span class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-yellow-500 to-amber-600 text-white rounded-full text-sm font-medium shadow-md hover:shadow-lg transition-all">
+                            Lihat FAQ <i class="fas fa-external-link-alt ml-2"></i>
+                        </span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Menu 6: Feedback & Saran -->
+            <a href="https://forms.gle/cAJGrPKEdVB56hnZ7" 
+               target="_blank"
+               class="glass-card rounded-2xl p-6 menu-card">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center mb-4 shadow-lg">
+                        <i class="fas fa-comments text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Feedback & Saran</h3>
+                    <p class="text-sm text-gray-600 mb-4">
+                        Sampaikan masukan untuk perbaikan
+                    </p>
+                    <div class="mt-auto">
+                        <span class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-full text-sm font-medium shadow-md hover:shadow-lg transition-all">
+                            Kirim Feedback <i class="fas fa-paper-plane ml-2"></i>
+                        </span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Bantuan WhatsApp -->
+        <div class="glass-card rounded-2xl p-6 text-center mb-6">
+            <div class="flex items-center justify-center mb-4">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
+                    <i class="fab fa-whatsapp text-white text-xl"></i>
+                </div>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">Butuh Bantuan?</h3>
+            <p class="text-sm text-gray-600 mb-4">
+                Hubungi Admin SiHATI melalui WhatsApp
+            </p>
+            <a href="https://wa.me/6285869140160" 
+               target="_blank"
+               class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-full font-medium shadow-lg hover:shadow-xl transition-all hover:scale-105">
+                <i class="fab fa-whatsapp mr-2"></i>
+                085869140160
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center text-white text-sm">
+            <p class="opacity-90">© 2025 Pemerintah Kabupaten Grobogan - SiHATI. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+        function goToApp() {
+            if (typeof CONFIG !== 'undefined' && CONFIG.APPS_SCRIPT_URL) {
+                window.open(CONFIG.APPS_SCRIPT_URL + '?page=app', '_blank');
+            } else {
+                alert('Konfigurasi URL aplikasi belum diset. Silakan edit config.js');
+            }
+        }
+
+        function goToDashboard() {
+            window.location.href = 'dashboard.html';
+        }
+
+        // Loading animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.menu-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

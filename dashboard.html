@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - SiHATI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .card {
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <img src="https://i.imgur.com/Jcf9CIW.png" alt="Logo" class="h-10 w-10 object-contain" onerror="this.src='https://placehold.co/40x40/667eea/ffffff?text=L'">
+                    <span class="ml-3 text-xl font-bold gradient-text">SiHATI Dashboard</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-600" id="userInfo">
+                        <i class="fas fa-user-circle mr-1"></i>
+                        <span id="userName">Loading...</span>
+                    </span>
+                    <button onclick="logout()" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-sm">
+                        <i class="fas fa-sign-out-alt mr-1"></i>Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Filter Section -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+            <h2 class="text-lg font-bold text-gray-800 mb-4">
+                <i class="fas fa-filter mr-2"></i>Filter Data
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tahun</label>
+                    <select id="filterTahun" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="">Semua Tahun</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Bulan</label>
+                    <select id="filterBulan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="">Semua Bulan</option>
+                        <option value="01">Januari</option>
+                        <option value="02">Februari</option>
+                        <option value="03">Maret</option>
+                        <option value="04">April</option>
+                        <option value="05">Mei</option>
+                        <option value="06">Juni</option>
+                        <option value="07">Juli</option>
+                        <option value="08">Agustus</option>
+                        <option value="09">September</option>
+                        <option value="10">Oktober</option>
+                        <option value="11">November</option>
+                        <option value="12">Desember</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">SKPD</label>
+                    <select id="filterSkpd" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="">Semua SKPD</option>
+                    </select>
+                </div>
+                <div class="flex items-end">
+                    <button onclick="applyFilters()" class="w-full px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all font-medium">
+                        <i class="fas fa-search mr-2"></i>Terapkan Filter
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Total Kegiatan -->
+            <div class="bg-white rounded-xl shadow-md p-6 card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600 mb-1">Total Kegiatan</p>
+                        <h3 class="text-3xl font-bold text-gray-800" id="totalKegiatan">-</h3>
+                    </div>
+                    <div class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-calendar-check text-2xl text-blue-600"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Anggota -->
+            <div class="bg-white rounded-xl shadow-md p-6 card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600 mb-1">Total Anggota</p>
+                        <h3 class="text-3xl font-bold text-gray-800" id="totalAnggota">-</h3>
+                    </div>
+                    <div class="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-users text-2xl text-purple-600"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Honor Kotor -->
+            <div class="bg-white rounded-xl shadow-md p-6 card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600 mb-1">Total Honor Kotor</p>
+                        <h3 class="text-2xl font-bold text-gray-800" id="totalHonorKotor">-</h3>
+                    </div>
+                    <div class="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-money-bill-wave text-2xl text-green-600"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Honor Bersih -->
+            <div class="bg-white rounded-xl shadow-md p-6 card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600 mb-1">Total Honor Bersih</p>
+                        <h3 class="text-2xl font-bold text-gray-800" id="totalHonorBersih">-</h3>
+                    </div>
+                    <div class="w-14 h-14 bg-indigo-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-wallet text-2xl text-indigo-600"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Trend Chart -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">
+                    <i class="fas fa-chart-line mr-2"></i>Tren Kegiatan & Honor
+                </h3>
+                <canvas id="trendChart"></canvas>
+            </div>
+
+            <!-- Top SKPD Chart -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">
+                    <i class="fas fa-chart-bar mr-2"></i>Top 5 SKPD (Honor Bersih)
+                </h3>
+                <canvas id="skpdChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Compliance Section -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">
+                <i class="fas fa-shield-alt mr-2"></i>Compliance Status
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div class="p-4 bg-red-50 rounded-lg border border-red-200">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-red-600 font-medium">Violations</p>
+                            <h4 class="text-2xl font-bold text-red-700" id="violations">0</h4>
+                        </div>
+                        <i class="fas fa-exclamation-triangle text-2xl text-red-500"></i>
+                    </div>
+                </div>
+                <div class="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-yellow-600 font-medium">Near Limit</p>
+                            <h4 class="text-2xl font-bold text-yellow-700" id="nearLimit">0</h4>
+                        </div>
+                        <i class="fas fa-exclamation-circle text-2xl text-yellow-500"></i>
+                    </div>
+                </div>
+                <div class="p-4 bg-green-50 rounded-lg border border-green-200">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-green-600 font-medium">Compliant</p>
+                            <h4 class="text-2xl font-bold text-green-700" id="compliant">-</h4>
+                        </div>
+                        <i class="fas fa-check-circle text-2xl text-green-500"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Violation Details -->
+            <div id="violationDetails" class="hidden mt-4">
+                <h4 class="font-semibold text-gray-800 mb-2">Detail Pelanggaran:</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">NIP</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Eselon</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Bulan</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Count</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Limit</th>
+                            </tr>
+                        </thead>
+                        <tbody id="violationTable" class="bg-white divide-y divide-gray-200">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <a href="admin-login-log.html" class="bg-white rounded-xl shadow-md p-6 card hover:bg-indigo-50 transition-colors">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
+                        <i class="fas fa-history text-xl text-indigo-600"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800">Login Log</h4>
+                        <p class="text-sm text-gray-600">Lihat riwayat login</p>
+                    </div>
+                </div>
+            </a>
+
+            <a href="admin-data-asn.html" class="bg-white rounded-xl shadow-md p-6 card hover:bg-purple-50 transition-colors">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4">
+                        <i class="fas fa-user-edit text-xl text-purple-600"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800">Kelola Data ASN</h4>
+                        <p class="text-sm text-gray-600">CRUD data pegawai</p>
+                    </div>
+                </div>
+            </a>
+
+            <a href="index.html" class="bg-white rounded-xl shadow-md p-6 card hover:bg-green-50 transition-colors">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                        <i class="fas fa-home text-xl text-green-600"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800">Kembali ke Home</h4>
+                        <p class="text-sm text-gray-600">Halaman utama</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+        let trendChart, skpdChart;
+        let currentFilters = {
+            tahun: '',
+            bulan: '',
+            skpd: ''
+        };
+
+        // Check auth
+        const token = localStorage.getItem('sihatiToken');
+        const user = JSON.parse(localStorage.getItem('sihatiUser') || '{}');
+
+        if (!token || user.role !== 'admin') {
+            window.location.href = 'login.html';
+        }
+
+        document.getElementById('userName').textContent = user.displayName || user.username;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadFilterOptions();
+            await loadDashboardData();
+        });
+
+        async function loadFilterOptions() {
+            try {
+                const response = await fetch(CONFIG.APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'getDashboardFilters',
+                        token: token
+                    })
+                });
+
+                const result = await response.json();
+                if (result.error) throw new Error(result.error);
+
+                // Populate tahun dropdown
+                const tahunSelect = document.getElementById('filterTahun');
+                result.years.forEach(year => {
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.textContent = year;
+                    if (year === result.defaultYear) option.selected = true;
+                    tahunSelect.appendChild(option);
+                });
+
+                // Populate SKPD dropdown
+                const skpdSelect = document.getElementById('filterSkpd');
+                result.skpdList.forEach(skpd => {
+                    const option = document.createElement('option');
+                    option.value = skpd;
+                    option.textContent = skpd;
+                    skpdSelect.appendChild(option);
+                });
+
+                // Set default month
+                if (result.defaultMonth) {
+                    document.getElementById('filterBulan').value = result.defaultMonth;
+                }
+
+                // Set current filters
+                currentFilters.tahun = result.defaultYear || '';
+                currentFilters.bulan = result.defaultMonth || '';
+            } catch (error) {
+                console.error('Error loading filters:', error);
+            }
+        }
+
+        async function loadDashboardData() {
+            try {
+                const response = await fetch(CONFIG.APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'getDashboardStats',
+                        token: token,
+                        tahun: currentFilters.tahun,
+                        bulan: currentFilters.bulan,
+                        skpd: currentFilters.skpd
+                    })
+                });
+
+                const result = await response.json();
+                if (result.error) throw new Error(result.error);
+
+                updateKPIs(result);
+                updateCharts(result);
+                updateCompliance(result.compliance);
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                alert('Gagal memuat data dashboard: ' + error.message);
+            }
+        }
+
+        function updateKPIs(data) {
+            document.getElementById('totalKegiatan').textContent = data.totalKegiatan.toLocaleString();
+            document.getElementById('totalAnggota').textContent = data.totalAnggota.toLocaleString();
+            document.getElementById('totalHonorKotor').textContent = 'Rp ' + data.totalHonorKotor.toLocaleString();
+            document.getElementById('totalHonorBersih').textContent = 'Rp ' + data.totalHonorBersih.toLocaleString();
+        }
+
+        function updateCharts(data) {
+            // Trend Chart
+            const trendCtx = document.getElementById('trendChart').getContext('2d');
+            if (trendChart) trendChart.destroy();
+
+            trendChart = new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: data.seriesMonth.map(d => d.ym),
+                    datasets: [
+                        {
+                            label: 'Jumlah Kegiatan',
+                            data: data.seriesMonth.map(d => d.kegiatan),
+                            borderColor: 'rgb(102, 126, 234)',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Honor Bersih (Juta Rp)',
+                            data: data.seriesMonth.map(d => Math.round(d.honorBersih / 1000000)),
+                            borderColor: 'rgb(118, 75, 162)',
+                            backgroundColor: 'rgba(118, 75, 162, 0.1)',
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: { display: true, text: 'Jumlah Kegiatan' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: { display: true, text: 'Honor Bersih (Juta Rp)' },
+                            grid: { drawOnChartArea: false }
+                        }
+                    }
+                }
+            });
+
+            // SKPD Chart
+            const skpdCtx = document.getElementById('skpdChart').getContext('2d');
+            if (skpdChart) skpdChart.destroy();
+
+            skpdChart = new Chart(skpdCtx, {
+                type: 'bar',
+                data: {
+                    labels: data.topSkpd.map(d => d.skpd.length > 30 ? d.skpd.substring(0, 30) + '...' : d.skpd),
+                    datasets: [{
+                        label: 'Honor Bersih (Juta Rp)',
+                        data: data.topSkpd.map(d => Math.round(d.honorBersih / 1000000)),
+                        backgroundColor: [
+                            'rgba(102, 126, 234, 0.8)',
+                            'rgba(118, 75, 162, 0.8)',
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(139, 92, 246, 0.8)',
+                            'rgba(99, 102, 241, 0.8)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Honor Bersih (Juta Rp)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateCompliance(compliance) {
+            document.getElementById('violations').textContent = compliance.violations;
+            document.getElementById('nearLimit').textContent = compliance.nearLimit;
+            
+            const total = compliance.violations + compliance.nearLimit;
+            document.getElementById('compliant').textContent = total > 0 ? 'Review' : 'OK';
+
+            if (compliance.details && compliance.details.length > 0) {
+                document.getElementById('violationDetails').classList.remove('hidden');
+                const tbody = document.getElementById('violationTable');
+                tbody.innerHTML = '';
+                
+                compliance.details.forEach(detail => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="px-4 py-2 text-sm">${detail.nip}</td>
+                        <td class="px-4 py-2 text-sm">${detail.eselon}</td>
+                        <td class="px-4 py-2 text-sm">${detail.month}</td>
+                        <td class="px-4 py-2 text-sm font-semibold text-red-600">${detail.count}</td>
+                        <td class="px-4 py-2 text-sm">${detail.limit}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+        }
+
+        function applyFilters() {
+            currentFilters.tahun = document.getElementById('filterTahun').value;
+            currentFilters.bulan = document.getElementById('filterBulan').value;
+            currentFilters.skpd = document.getElementById('filterSkpd').value;
+            loadDashboardData();
+        }
+
+        function logout() {
+            localStorage.removeItem('sihatiToken');
+            localStorage.removeItem('sihatiUser');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
